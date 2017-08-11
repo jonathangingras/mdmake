@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ -L $0 ]
+then
+    __FILE__=$(readlink $0)
+else
+    __FILE__=$0
+fi
+
+__DIR__=$(cd $(dirname $__FILE__) && pwd)
+
+make -f $__DIR__/mdmakefile $@
