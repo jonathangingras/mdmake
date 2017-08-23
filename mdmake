@@ -9,4 +9,8 @@ fi
 
 __DIR__=$(cd $(dirname $__FILE__) && pwd)
 
+
+export MDMAKE_RESOURCE_DIR=$__DIR__/resource
+
+
 make -f $__DIR__/mdmakefile $@
