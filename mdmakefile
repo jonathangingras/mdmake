@@ -40,26 +40,31 @@ all: help
 .PHONY: clean help dependencies
 
 
-slides: $(BUILD_DIR) $(patsubst %.md, $(BUILD_DIR)/%.slides.pdf, $(SRC))
-doc: $(BUILD_DIR) $(patsubst %.md, $(BUILD_DIR)/%.doc.pdf, $(SRC))
 html: $(BUILD_DIR) $(patsubst %.md, $(BUILD_DIR)/%.html, $(SRC))
+word: $(BUILD_DIR) $(patsubst %.md, $(BUILD_DIR)/%.docx, $(SRC))
+pdf: $(BUILD_DIR) $(patsubst %.md, $(BUILD_DIR)/%.doc.pdf, $(SRC))
+slides: $(BUILD_DIR) $(patsubst %.md, $(BUILD_DIR)/%.slides.pdf, $(SRC))
 
 
 $(BUILD_DIR)/%.html: %.md HTML_STYLE.css.html $(HTML_RES)
 	cat $(filter-out $<,$^) > $@.header
-	pandoc -s -S -N -o $@ $< -H $@.header
+	pandoc -s -N -o $@ $< -H $@.header
 	rm $@.header
+
+
+$(BUILD_DIR)/%.docx: %.md
+	pandoc -s -N -o $@ $<
 
 
 $(BUILD_DIR)/%.doc.tex: %.md $(TEX_RES)
 	cat $(filter-out $<,$^) > $@.header
-	pandoc -s -S -N -o $@ $< -H $@.header
+	pandoc -s -N -o $@ $< -H $@.header
 	rm $@.header
 
 
 $(BUILD_DIR)/%.slides.tex: %.md $(TEX_RES) $(SLIDES_RES)
 	cat $(filter-out $<,$^) > $@.header
-	pandoc -s -S -N -o $@ -t beamer $< -V theme=$(BEAMER_THEME) -H $@.header
+	pandoc -s -N -o $@ -t beamer $< -V theme=$(BEAMER_THEME) -H $@.header
 	rm $@.header
 
 
@@ -108,7 +113,7 @@ $(BUILD_DIR):
 
 
 clean:
-	rm -rf $(BUILD_DIR)/*.pdf $(BUILD_DIR)/*.html
+	rm -rf $(BUILD_DIR)/*.pdf $(BUILD_DIR)/*.html $(BUILD_DIR)/*.docx
 
 help:
 	@echo "mdmake utility"
@@ -116,9 +121,10 @@ help:
 	@echo ""
 
 	@echo "targets:"
+	@echo "  pdf                                               " --- build all markdown in current directory as LaTeX pdf
 	@echo "  slides                                            " --- build all markdown in current directory as beamer slides
 	@echo "  html                                              " --- build all markdown in current directory as html documents
-	@echo "  doc                                               " --- build all markdown in current directory as LaTeX pdf
+	@echo "  word                                              " --- build all markdown in current directory as Microsoft Word documents
 	@echo "  [target /wo .md][ .slides.pdf | .doc.pdf | .html ]" --- build individual target
 	@echo "  dependencies                                      " --- get software dependencies
 	@echo "  clean                                             " --- clean directory
