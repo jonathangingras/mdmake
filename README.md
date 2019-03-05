@@ -5,6 +5,7 @@ Simple pandoc wrapper utility that converts markdown format files to either:
 - Beamer slides
 - LaTeX pdf
 - HTML documents
+- Microsoft Word documents
 
 
 ## dependencies
@@ -26,5 +27,5 @@ Make sure ```mdmake``` is executable.
 
 In a directory containing markdown documents (.md):
 ```Shell
-$ mdmake [ slides | doc | html ]
+$ mdmake [ slides | doc | html | word ]
 ```
